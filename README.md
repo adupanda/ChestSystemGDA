@@ -3,3 +3,6 @@ Once a chest starts unlocking a timer starts after which the user can open that 
 If one chest is unlocking the user cannot start a timer for another chest.
 The other way to unlock chests is to use gems and unlock chests instantly.
 There are 4 different types of chests which have different rewards depending on their type. This was done using scriptable objects.
+
+Loom video below.
+https://www.loom.com/share/d0804574e016412997f092b93ccad199
