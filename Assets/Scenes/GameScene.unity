@@ -288,10 +288,10 @@ MonoBehaviour:
   chestSlots: []
   chestSlotPrefab: {fileID: 7224895700574159343, guid: aec8c12650dbe5a4b846baaaaea52a23, type: 3}
   chestSlotContainer: {fileID: 1931332000}
-  bronzeChest: {fileID: 11400000, guid: 512e9af605417744abdf4c899894801f, type: 2}
-  silverChest: {fileID: 11400000, guid: 6ab03b1550c73e74f8a8b05e10e74340, type: 2}
-  goldChest: {fileID: 11400000, guid: bb63465f26feb6c4cb10f826f116e140, type: 2}
-  magicChest: {fileID: 11400000, guid: f06d8bca229ce554fa230eb171948d8e, type: 2}
+  bronzeChestData: {fileID: 11400000, guid: bc6f48ef790edfa43a155bdd1e5e15ce, type: 2}
+  silverChestData: {fileID: 11400000, guid: 29abf5e68b08b224d93263da34a9d1cd, type: 2}
+  goldChestData: {fileID: 11400000, guid: d7bef2606f21d69419ad7e48ce6c3c0f, type: 2}
+  magicChestData: {fileID: 11400000, guid: 95118f16ab834b349a5d90d7a05232f4, type: 2}
   currency: {fileID: 532239688}
   currencyDisplay: {fileID: 532239687}
 --- !u!4 &297433507
@@ -302,12 +302,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 297433505}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 755.8308, y: 261.23303, z: 4.616766}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -37.16919, y: -184.76694, z: 4.616766}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2006400289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -1726,6 +1726,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 297433507}
   - {fileID: 532239683}
   - {fileID: 1931332000}
   - {fileID: 281646196}
@@ -1744,4 +1745,3 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 2006400289}
   - {fileID: 1090714253}
-  - {fileID: 297433507}

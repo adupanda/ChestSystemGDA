@@ -376,7 +376,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -8467919238568464113}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ChestSlot, Assembly-CSharp
         m_MethodName: OnSlotClicked
         m_Mode: 1
@@ -1175,7 +1175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3181478114052214994}
-  - component: {fileID: -8467919238568464113}
+  - component: {fileID: 3803251190581935142}
   m_Layer: 5
   m_Name: ChestSlot
   m_TagString: Untagged
@@ -1208,7 +1208,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &-8467919238568464113
+--- !u!114 &3803251190581935142
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1217,7 +1217,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7224895700574159343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 175a0dad38ce41447a8bb98a298a6baf, type: 3}
+  m_Script: {fileID: 11500000, guid: 33276adc451beb94fa7538577fde6ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chestTypeText: {fileID: 5987166012964514942}
@@ -1225,6 +1225,8 @@ MonoBehaviour:
   startTimerButton: {fileID: 8184794537463697292}
   unlockWithGemsButton: {fileID: 6463109876858089482}
   collectRewardsButton: {fileID: 5408662636359851745}
+  chestSlotButton: {fileID: 4680049832372313788}
+  isUnlocking: 0
 --- !u!1 &9119836062969327013
 GameObject:
   m_ObjectHideFlags: 0

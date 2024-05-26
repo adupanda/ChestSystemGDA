@@ -3,20 +3,18 @@ using UnityEngine;
 
 public class ChestManager : MonoBehaviour
 {
-    public List<GameObject> chestSlots;
-    public GameObject chestSlotPrefab;
-    public Transform chestSlotContainer;
+    [SerializeField] private List<ChestView> chestSlots = new List<ChestView>();
+    [SerializeField] private GameObject chestSlotPrefab;
+    [SerializeField] private Transform chestSlotContainer;
 
-    public Chest bronzeChest;
-    public Chest silverChest;
-    public Chest goldChest;
-    public Chest magicChest;
+    [SerializeField] private ChestData bronzeChestData;
+    [SerializeField] private ChestData silverChestData;
+    [SerializeField] private ChestData goldChestData;
+    [SerializeField] private ChestData magicChestData;
 
-    private Queue<Chest> unlockQueue = new Queue<Chest>();
-    [SerializeField]
-    private Currency currency;
-    [SerializeField]
-    private CurrencyDisplay currencyDisplay;
+    private Queue<ChestController> unlockQueue = new Queue<ChestController>();
+    [SerializeField] private Currency currency;
+    [SerializeField] private CurrencyDisplay currencyDisplay;
 
     private void Start()
     {
@@ -27,7 +25,9 @@ public class ChestManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            var slot = Instantiate(chestSlotPrefab, chestSlotContainer);
+            var slot = Instantiate(chestSlotPrefab, chestSlotContainer).GetComponent<ChestView>();
+            slot.HideUnlockButtons();
+            slot.HideCollectButton();
             chestSlots.Add(slot);
         }
     }
@@ -36,32 +36,31 @@ public class ChestManager : MonoBehaviour
     {
         foreach (var slot in chestSlots)
         {
-            var chestSlot = slot.GetComponent<ChestSlot>();
-            if (chestSlot.GetChest() == null)
+            if (slot != null && string.IsNullOrEmpty(slot.chestTypeText.text))
             {
-                Chest chest = InstantiateRandomChest();
-                chest.Initialize(chest.chestType,chest.unlockTime,chest.minRewardCoins,chest.maxRewardCoins,chest.minRewardGems,chest.maxRewardGems);
-                chestSlot.AssignChest(chest);
-                chestSlot.InitializeCurrencyVariables(currency, currencyDisplay);
+                ChestData chestData = GetRandomChestData();
+                ChestModel chestModel = new ChestModel(chestData);
+                ChestController chestController = new ChestController(chestModel, slot, currency,currencyDisplay);
+                slot.HideUnlockButtons();
+                slot.HideCollectButton();
                 break;
             }
         }
     }
 
-    private Chest InstantiateRandomChest()
+    private ChestData GetRandomChestData()
     {
         ChestType chestType = (ChestType)Random.Range(0, 4);
-
         switch (chestType)
         {
             case ChestType.Bronze:
-                return Instantiate(bronzeChest);
+                return bronzeChestData;
             case ChestType.Silver:
-                return Instantiate(silverChest);
+                return silverChestData;
             case ChestType.Gold:
-                return Instantiate(goldChest);
+                return goldChestData;
             case ChestType.Magic:
-                return Instantiate(magicChest);
+                return magicChestData;
             default:
                 return null;
         }
@@ -71,30 +70,33 @@ public class ChestManager : MonoBehaviour
     {
         foreach (var slot in chestSlots)
         {
-            var chestSlot = slot.GetComponent<ChestSlot>();
-            if (chestSlot.GetChest() != null && chestSlot.GetChest().IsUnlocking())
+            if (slot != null && !string.IsNullOrEmpty(slot.chestTypeText.text))
             {
-                return true;
+                var chestController = slot.GetComponent<ChestController>();
+                if (chestController != null && chestController.IsUnlocking())
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public void StartUnlockingChest(Chest chest)
+    public void StartUnlockingChest(ChestController chestController)
     {
-        chest.StartUnlocking();
+        chestController.StartUnlocking();
     }
 
-    public void QueueChestForUnlocking(Chest chest)
+    public void QueueChestForUnlocking(ChestController chestController)
     {
-        unlockQueue.Enqueue(chest);
+        unlockQueue.Enqueue(chestController);
     }
 
     public void ProcessUnlockQueue()
     {
         if (unlockQueue.Count > 0 && !IsAnyChestUnlocking())
         {
-            Chest nextChest = unlockQueue.Dequeue();
+            ChestController nextChest = unlockQueue.Dequeue();
             StartUnlockingChest(nextChest);
         }
     }
