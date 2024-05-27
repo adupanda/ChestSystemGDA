@@ -27,22 +27,23 @@ public class ChestManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            var slot = Instantiate(chestSlotPrefab, chestSlotContainer);
+            ChestView slot = Instantiate(chestSlotPrefab, chestSlotContainer);
             chestSlots.Add(slot);
-            slot.HideUnlockButtons();
-            slot.HideCollectButton();
+            slot.gameObject.SetActive(false);
+            
         }
     }
 
     public void AddRandomChest()
     {
-        foreach (var slot in chestSlots)
+        foreach (ChestView slot in chestSlots)
         {
-            if (slot != null && slot.chestImage.sprite == null)
+            if (slot != null && slot.ChestImage.sprite == null)
             {
                 ChestData chestData = GetRandomChestData();
                 
                 ChestController chestController = new ChestController(chestData, slot, currency,currencyDisplay);
+                slot.gameObject.SetActive(true);
                 chestControllers.Add(chestController);
                
                 break;
@@ -70,7 +71,7 @@ public class ChestManager : MonoBehaviour
 
     public bool IsAnyChestUnlocking()
     {
-        foreach (var controller in chestControllers)
+        foreach (ChestController controller in chestControllers)
         {
             if (controller.IsUnlocking())
             {
