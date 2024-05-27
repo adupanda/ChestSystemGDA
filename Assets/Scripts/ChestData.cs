@@ -1,12 +1,6 @@
 using UnityEngine;
 
-public enum ChestType
-{
-    Bronze,
-    Silver,
-    Gold,
-    Magic
-}
+
 
 
 
@@ -14,6 +8,7 @@ public enum ChestType
 public class ChestData : ScriptableObject
 {
     public ChestType chestType;
+    public Sprite chestSprite;
     public int unlockTime; // in minutes
     public int minRewardCoins;
     public int maxRewardCoins;

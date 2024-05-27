@@ -1,31 +1,33 @@
+using System;
 using UnityEngine;
 
 public class Currency : MonoBehaviour
 {
-    public int coins = 500;
-    public int gems = 500;
+    [SerializeField] private int coins = 500;
+    public int COINS => coins;
+    [SerializeField] private int gems = 500;
+    public int GEMS => gems;
 
-    public delegate void CurrencyChanged();
-    public event CurrencyChanged OnCurrencyChanged;
+    
+
+    public Action<int> OnCoinsChanged;
+    public Action<int> OnGemsChanged;
+
+    private void Start()
+    {
+        AddCoins(500);
+        AddGems(500);
+    }
 
     public void AddCoins(int amount)
     {
         coins += amount;
-        OnCurrencyChanged?.Invoke();
+        OnCoinsChanged?.Invoke(coins);
     }
 
     public void AddGems(int amount)
     {
         gems += amount;
-        OnCurrencyChanged?.Invoke();
-    }
-
-    public void DeductGems(int amount)
-    {
-        if (gems >= amount)
-        {
-            gems -= amount;
-            OnCurrencyChanged?.Invoke();
-        }
+        OnGemsChanged?.Invoke(gems);
     }
 }

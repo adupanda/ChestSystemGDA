@@ -5,40 +5,37 @@ using System.Collections;
 
 public class ChestView : MonoBehaviour
 {
-    public TextMeshProUGUI chestTypeText;
+
+    [SerializeField] public Image chestImage;
+   
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI gemCostText;
 
-
-    
     [SerializeField] private Button startTimerButton;
     [SerializeField] private Button unlockWithGemsButton;
     [SerializeField] private Button collectRewardsButton;
-
     [SerializeField] private Button chestSlotButton;
 
-
-    private ChestModel chestModel;
-    private Currency currency;
-    private CurrencyDisplay currencyDisplay;
-    private int remainingTime;
-    public bool isUnlocking;
-    private bool isUnlocked;
-
+    private ChestController chestController;
     private bool unlockMenuOpen;
 
-    public void Initialize(ChestModel model, Currency currency,CurrencyDisplay currencyDisplay)
+    public void Initialize(ChestController controller)
     {
-        this.chestModel = model;
-        this.currency = currency;
-        this.currencyDisplay = currencyDisplay;
+        chestController = controller;
 
-        startTimerButton.onClick.AddListener(StartUnlocking);
-        unlockWithGemsButton.onClick.AddListener(UnlockWithGems);
-        collectRewardsButton.onClick.AddListener(CollectRewards);
+        startTimerButton.onClick.AddListener(chestController.StartUnlocking);
+        unlockWithGemsButton.onClick.AddListener(chestController.UnlockWithGems);
+        collectRewardsButton.onClick.AddListener(chestController.CollectRewards);
         chestSlotButton.onClick.AddListener(ChestSlotClicked);
 
-        SetChestType(chestModel.ChestType.ToString());
-        
+        chestController.OnTimerUpdated += UpdateTimerUI;
+        chestController.OnGemCostUpdated += UpdateGemCostText;
+        unlockMenuOpen = false;
+        SetChestSprite(chestController.GetChestSprite());
+        HideUnlockButtons();
+        HideCollectButton();
+        ImageView(true);
+
     }
 
     private void ChestSlotClicked()
@@ -46,6 +43,7 @@ public class ChestView : MonoBehaviour
         if (!unlockMenuOpen)
         {
             ShowUnlockButtons();
+            UpdateGemCostText(chestController.GetUnlockCost());
             unlockMenuOpen = true;
         }
         else
@@ -55,28 +53,27 @@ public class ChestView : MonoBehaviour
         }
     }
 
-    public void SetChestType(string chestType)
+    public void ImageView(bool isImageActive)
     {
-        chestTypeText.text = chestType;
+        chestImage.gameObject.SetActive(isImageActive);
     }
-
+    
     public void ShowUnlockButtons()
     {
         startTimerButton.gameObject.SetActive(true);
         unlockWithGemsButton.gameObject.SetActive(true);
-        
     }
 
     public void HideUnlockButtons()
     {
         startTimerButton.gameObject.SetActive(false);
         unlockWithGemsButton.gameObject.SetActive(false);
-        
     }
 
     public void ShowCollectButton()
     {
         collectRewardsButton.gameObject.SetActive(true);
+        ImageView(false);
     }
 
     public void HideCollectButton()
@@ -84,68 +81,7 @@ public class ChestView : MonoBehaviour
         collectRewardsButton.gameObject.SetActive(false);
     }
 
-    public void StartUnlocking()
-    {
-        if (!isUnlocking)
-        {
-            isUnlocking = true;
-            remainingTime = chestModel.UnlockTime * 60; // Convert to seconds
-            StartCoroutine(UnlockTimer());
-            HideUnlockButtons();
-        }
-    }
-
-    private IEnumerator UnlockTimer()
-    {
-        while (remainingTime > 0)
-        {
-            yield return new WaitForSeconds(1);
-            remainingTime--;
-            UpdateTimerUI(remainingTime);
-        }
-
-        isUnlocking = false;
-        isUnlocked = true;
-        UpdateTimerUI(remainingTime); // Final update when unlocked
-        ShowCollectButton();
-    }
-
-    private void UnlockWithGems()
-    {
-        int cost = GetUnlockCost();
-        if (currency.gems >= cost)
-        {
-            currency.DeductGems(cost);
-            remainingTime = 0;
-            isUnlocking = false;
-            isUnlocked = true;
-            UpdateTimerUI(remainingTime);
-            ShowCollectButton();
-            currencyDisplay.UpdateCurrencyUI(); // Update the currency display
-            HideUnlockButtons();
-        }
-        else
-        {
-            Debug.Log("Not enough gems to unlock the chest.");
-        }
-    }
-
-    private int GetUnlockCost()
-    {
-        if(isUnlocking)
-        {
-            return Mathf.CeilToInt(remainingTime / 20f); // 1 gem per 20 seconds
-        }
-        else
-        {
-            return Mathf.CeilToInt(chestModel.UnlockTime * 3f); // each minute is 3 intervals of 20 seconds so time in minutes multiplied by 3
-        }
-        // Calculate the gem cost to unlock instantly based on remaining time
-
-        
-    }
-
-    private void UpdateTimerUI(int remainingTime)
+    public void UpdateTimerUI(int remainingTime)
     {
         if (remainingTime > 0)
         {
@@ -159,26 +95,27 @@ public class ChestView : MonoBehaviour
         }
     }
 
-    private void CollectRewards()
+    public void UpdateGemCostText(int cost)
     {
-        if (isUnlocked && !chestModel.IsCollected)
-        {
-            chestModel.CollectRewards(currency);
-            ClearChestSlot();
-        }
+        gemCostText.text = "Cost: " + cost + " gems";
     }
 
     public void ClearChestSlot()
     {
-        chestTypeText.text = string.Empty;
+        chestImage.sprite = null;
         timerText.text = string.Empty;
-        
+        gemCostText.text = string.Empty;
 
         startTimerButton.onClick.RemoveAllListeners();
         unlockWithGemsButton.onClick.RemoveAllListeners();
         collectRewardsButton.onClick.RemoveAllListeners();
-
+        chestSlotButton.onClick.RemoveAllListeners();
         HideUnlockButtons();
         HideCollectButton();
+    }
+
+    public void SetChestSprite(Sprite chestSprite)
+    {
+        chestImage.sprite = chestSprite;
     }
 }

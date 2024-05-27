@@ -8,22 +8,23 @@ public class ChestModel
     public int RewardGems { get; private set; }
     public bool IsCollected { get; private set; }
 
+    public Sprite ChestSprite { get; private set; } // Add this property
+
     public ChestModel(ChestData data)
     {
-        Initialize(data);
-    }
-
-    private void Initialize(ChestData data)
-    {
+       
         ChestType = data.chestType;
         UnlockTime = data.unlockTime;
-        GenerateRandomRewards(data.minRewardCoins, data.maxRewardCoins, data.minRewardGems, data.maxRewardGems);
+        ChestSprite = data.chestSprite;
+        GenerateRandomRewards(data);
     }
 
-    private void GenerateRandomRewards(int minCoins, int maxCoins, int minGems, int maxGems)
+    
+
+    private void GenerateRandomRewards(ChestData data)
     {
-        RewardCoins = Random.Range(minCoins, maxCoins + 1);
-        RewardGems = Random.Range(minGems, maxGems + 1);
+        RewardCoins = Random.Range(data.minRewardCoins, data.maxRewardCoins + 1);
+        RewardGems = Random.Range(data.minRewardGems, data.maxRewardGems + 1);
     }
 
     public void CollectRewards(Currency currency)

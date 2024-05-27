@@ -4,7 +4,7 @@ using UnityEngine;
 public class ChestManager : MonoBehaviour
 {
     [SerializeField] private List<ChestView> chestSlots = new List<ChestView>();
-    [SerializeField] private GameObject chestSlotPrefab;
+    [SerializeField] private ChestView chestSlotPrefab;
     [SerializeField] private Transform chestSlotContainer;
 
     [SerializeField] private ChestData bronzeChestData;
@@ -13,6 +13,8 @@ public class ChestManager : MonoBehaviour
     [SerializeField] private ChestData magicChestData;
 
     private Queue<ChestController> unlockQueue = new Queue<ChestController>();
+    private List<ChestController> chestControllers = new List<ChestController>();
+    
     [SerializeField] private Currency currency;
     [SerializeField] private CurrencyDisplay currencyDisplay;
 
@@ -25,10 +27,10 @@ public class ChestManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            var slot = Instantiate(chestSlotPrefab, chestSlotContainer).GetComponent<ChestView>();
+            var slot = Instantiate(chestSlotPrefab, chestSlotContainer);
+            chestSlots.Add(slot);
             slot.HideUnlockButtons();
             slot.HideCollectButton();
-            chestSlots.Add(slot);
         }
     }
 
@@ -36,13 +38,13 @@ public class ChestManager : MonoBehaviour
     {
         foreach (var slot in chestSlots)
         {
-            if (slot != null && string.IsNullOrEmpty(slot.chestTypeText.text))
+            if (slot != null && slot.chestImage.sprite == null)
             {
                 ChestData chestData = GetRandomChestData();
-                ChestModel chestModel = new ChestModel(chestData);
-                ChestController chestController = new ChestController(chestModel, slot, currency,currencyDisplay);
-                slot.HideUnlockButtons();
-                slot.HideCollectButton();
+                
+                ChestController chestController = new ChestController(chestData, slot, currency,currencyDisplay);
+                chestControllers.Add(chestController);
+               
                 break;
             }
         }
@@ -68,15 +70,11 @@ public class ChestManager : MonoBehaviour
 
     public bool IsAnyChestUnlocking()
     {
-        foreach (var slot in chestSlots)
+        foreach (var controller in chestControllers)
         {
-            if (slot != null && !string.IsNullOrEmpty(slot.chestTypeText.text))
+            if (controller.IsUnlocking())
             {
-                var chestController = slot.GetComponent<ChestController>();
-                if (chestController != null && chestController.IsUnlocking())
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

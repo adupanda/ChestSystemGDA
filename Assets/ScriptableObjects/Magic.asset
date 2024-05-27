@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Magic
   m_EditorClassIdentifier: 
   chestType: 3
+  chestSprite: {fileID: 21300000, guid: 3757151fd001a864bb1f65f8f52f10e6, type: 3}
   unlockTime: 40
   minRewardCoins: 100
   maxRewardCoins: 200

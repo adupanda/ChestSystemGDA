@@ -3,38 +3,35 @@ using TMPro;
 
 public class CurrencyDisplay : MonoBehaviour
 {
-    public TextMeshProUGUI coinsText;
-    public TextMeshProUGUI gemsText;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI gemsText;
 
     [SerializeField]
     private Currency currency;
 
-    private void Start()
+    
+    private void OnEnable()
     {
-       
-
-        // Initially update the UI
-        UpdateCurrencyUI();
-
-        // Subscribe to the currency change event
-        currency.OnCurrencyChanged += UpdateCurrencyUI;
+        currency.OnCoinsChanged += UpdateCoinsUI;
+        currency.OnGemsChanged += UpdateGemsUI;
     }
 
-    public void UpdateCurrencyUI()
+    private void OnDisable()
     {
-        if (currency != null)
-        {
-            coinsText.text = "Coins: " + currency.coins.ToString();
-            gemsText.text = "Gems: " + currency.gems.ToString();
-        }
+        currency.OnCoinsChanged -= UpdateCoinsUI;
+        currency.OnGemsChanged -= UpdateGemsUI;
     }
 
-    private void OnDestroy()
+
+    public void UpdateCoinsUI(int amount)
     {
-        // Unsubscribe from the currency change event
-        if (currency != null)
-        {
-            currency.OnCurrencyChanged -= UpdateCurrencyUI;
-        }
+        coinsText.text = "Coins: " + amount.ToString();
     }
+
+    public void UpdateGemsUI(int amount)
+    {
+        gemsText.text = "Gems: " +  amount.ToString();
+    }
+
+   
 }

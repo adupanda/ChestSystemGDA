@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Silver
   m_EditorClassIdentifier: 
   chestType: 1
+  chestSprite: {fileID: 21300000, guid: 31b17986fa5b13f4f9b7403589287a19, type: 3}
   unlockTime: 20
   minRewardCoins: 30
   maxRewardCoins: 40

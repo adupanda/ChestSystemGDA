@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Gold
   m_EditorClassIdentifier: 
   chestType: 2
+  chestSprite: {fileID: 21300000, guid: b4c6e7d0285655f4a9db7355ab7ea678, type: 3}
   unlockTime: 30
   minRewardCoins: 60
   maxRewardCoins: 80
